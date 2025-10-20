@@ -33,8 +33,8 @@ This project implements and compares classical machine learning and deep learnin
 
 ```bash
 # Clone the repository
-git clone https://github.com/JakobeAllen/mnist-classification-project.git
-cd mnist-classification-project
+git clone https://github.com/JakobeAllen/mnist-project.git
+cd mnist-project
 
 # Install dependencies
 pip install -r requirements.txt
