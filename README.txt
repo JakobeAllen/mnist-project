@@ -1,4 +1,4 @@
-Project 1 (Pattern Recognition, Individual) by Jakobe Allen
+Project 1 (Pattern Recognition, Individual) by Jakobe Allen - README
 
 Abstract
 
@@ -158,3 +158,9 @@ Work by me:
 8. Conclusion
 
 In conclusion, this project shows that deep learning models provide better performance than classical machine learning models when working with image data. CNN achieved the best accuracy because it kept the images' shapes and patterns. Also, KNN still works well when you have less computing power.
+
+9. Github
+
+Since for some reason moodle won’t allow me to submit my code, I made a public github for my code: https://github.com/JakobeAllen/mnist-project
+
+
