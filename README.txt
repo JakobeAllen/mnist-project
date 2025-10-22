@@ -1,4 +1,4 @@
-Project 1 (Pattern Recognition, Individual) by Jakobe Allen - README
+Project 1 (Pattern Recognition, Individual) by Jakobe Allen
 
 Abstract
 
@@ -125,6 +125,8 @@ Output Files Created:
 - linear_confusion.png (Confusion matrix for Linear)
 - mlp_confusion.png (Confusion matrix for MLP)
 - cnn_confusion.png (Confusion matrix for CNN)
+
+There also could be other output files created after running the “python main.py” in the terminal. This is just the majority of the output files that could be created.
 
 How to Run:
 
