@@ -22,8 +22,7 @@ class LinearClassifierNumPy:
         n = y_true.shape[0]
         y_one_hot = np.zeros_like(y_pred)
         y_one_hot[np.arange(n), y_true.astype(int)] = 1
-        probs = self.softmax(y_pred)
-        loss = -np.sum(y_one_hot * np.log(probs + 1e-10)) / n
+        loss = np.sum((y_pred - y_one_hot) ** 2) / (2 * n)
         return loss
     
     def fit(self, X_train, y_train, X_val=None, y_val=None):
@@ -31,14 +30,13 @@ class LinearClassifierNumPy:
         
         for epoch in range(self.epochs):
             logits = self.forward(X_train)
-            probs = self.softmax(logits)
             loss = self.compute_loss(logits, y_train)
             self.loss_history.append(loss)
             
-            y_one_hot = np.zeros_like(probs)
+            y_one_hot = np.zeros_like(logits)
             y_one_hot[np.arange(n), y_train.astype(int)] = 1
             
-            d_logits = (probs - y_one_hot) / n
+            d_logits = (logits - y_one_hot) / n
             d_W = d_logits.T @ X_train
             d_b = np.sum(d_logits, axis=0)
             
@@ -62,7 +60,7 @@ class LinearClassifierPyTorch(nn.Module):
     def forward(self, x):
         return self.linear(x)
 
-def train_pytorch_linear(model, X_train, y_train, X_val, y_val, epochs=100, lr=0.01, batch_size=128):
+def train_pytorch_linear(model, X_train, y_train, X_val, y_val, epochs=100, lr=0.001, batch_size=128):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
     
@@ -71,7 +69,7 @@ def train_pytorch_linear(model, X_train, y_train, X_val, y_val, epochs=100, lr=0
     X_val_t = torch.FloatTensor(X_val).to(device)
     y_val_t = torch.LongTensor(y_val).to(device)
     
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.MSELoss()
     optimizer = optim.SGD(model.parameters(), lr=lr)
     loss_history = []
     
@@ -85,9 +83,12 @@ def train_pytorch_linear(model, X_train, y_train, X_val, y_val, epochs=100, lr=0
             batch_X = X_train_t[indices]
             batch_y = y_train_t[indices]
             
+            batch_y_one_hot = torch.zeros(batch_y.size(0), 10).to(device)
+            batch_y_one_hot.scatter_(1, batch_y.unsqueeze(1), 1)
+            
             optimizer.zero_grad()
             outputs = model(batch_X)
-            loss = criterion(outputs, batch_y)
+            loss = criterion(outputs, batch_y_one_hot)
             loss.backward()
             optimizer.step()
             epoch_loss += loss.item()
@@ -115,7 +116,7 @@ def run_linear_experiments(X_train, y_train, X_test, y_test, use_pytorch=False):
     
     if use_pytorch:
         model = LinearClassifierPyTorch(input_dim=784, output_dim=10)
-        model, loss_history = train_pytorch_linear(model, X_train, y_train, X_test, y_test, epochs=100, lr=0.1)
+        model, loss_history = train_pytorch_linear(model, X_train, y_train, X_test, y_test, epochs=200, lr=0.01)
         
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         model.eval()
@@ -124,7 +125,7 @@ def run_linear_experiments(X_train, y_train, X_test, y_test, use_pytorch=False):
             predictions = model(X_test_t).argmax(1).cpu().numpy()
         weights = model.linear.weight.detach().cpu().numpy()
     else:
-        model = LinearClassifierNumPy(lr=0.1, epochs=100)
+        model = LinearClassifierNumPy(lr=0.01, epochs=200)
         model.fit(X_train, y_train, X_test, y_test)
         predictions = model.predict(X_test)
         weights = model.W

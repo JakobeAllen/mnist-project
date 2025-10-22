@@ -12,6 +12,7 @@ class NaiveBayes:
         return (X > self.threshold).astype(np.float32)
     
     def fit(self, X_train, y_train):
+        # Convert images to binary
         X_binary = self.binarize(X_train)
         
         self.classes = np.unique(y_train)
@@ -21,6 +22,7 @@ class NaiveBayes:
         self.feature_probs = np.zeros((n_classes, n_features))
         self.class_priors = np.zeros(n_classes)
         
+        # Calculate probabilities for each digit class
         for idx, c in enumerate(self.classes):
             X_c = X_binary[y_train == c]
             self.class_priors[idx] = X_c.shape[0] / X_binary.shape[0]

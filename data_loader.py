@@ -35,10 +35,12 @@ class MNISTLoader:
         images = np.array(images)
         labels = np.array(labels)
         
+        # Shuffle the data randomly
         indices = np.random.permutation(len(images))
         images = images[indices]
         labels = labels[indices]
         
+        # Split into 80% training, 20% testing
         split_idx = int(len(images) * self.train_ratio)
         
         X_train = images[:split_idx]

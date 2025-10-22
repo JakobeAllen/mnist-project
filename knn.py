@@ -12,9 +12,12 @@ class KNN:
         self.y_train = y_train
     
     def predict_single(self, x):
+        # Calculate distance from x to all training images
         distances = np.sqrt(np.sum((self.X_train - x) ** 2, axis=1))
+        # Find the k closest images
         k_indices = np.argsort(distances)[:self.k]
         k_nearest_labels = self.y_train[k_indices]
+        # Picks the most common label
         unique, counts = np.unique(k_nearest_labels, return_counts=True)
         return unique[np.argmax(counts)]
     

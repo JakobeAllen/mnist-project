@@ -10,7 +10,7 @@ import json
 import time
 
 def main():
-    DATA_DIR = './mnist_data'  # Update this path if your data is elsewhere
+    DATA_DIR = './mnist_data'  # Remember to update this path if your data is somewhere else
     TRAIN_RATIO = 0.8
     
     print("="*70)
@@ -28,25 +28,25 @@ def main():
     # Prepare data
     X_train_norm = loader.normalize(X_train, method='0-1')
     X_test_norm = loader.normalize(X_test, method='0-1')
+    # Flatten from 28 by 28 images to 784-length vectors
     X_train_flat = loader.flatten(X_train_norm)
     X_test_flat = loader.flatten(X_test_norm)
     
     all_results = {}
     
-    # KNN - WARNING: This is SLOW with 56,000 training samples!
+    # KNN
     print("\n" + "="*70)
     print("EXPERIMENT 1: K-Nearest Neighbors")
     print("NOTE: KNN is slow with large datasets. Using subset for demo...")
     print("="*70)
     
-    # Use smaller subset for KNN to make it feasible
-    subset_size = 5000  # Use 5000 training samples instead of 56,000
+    subset_size = 5000 
     print(f"Using {subset_size} training samples for KNN (instead of {len(X_train_flat)})")
     
     knn_results = run_knn_experiments(
         X_train_flat[:subset_size], 
         y_train[:subset_size], 
-        X_test_flat[:2000],  # Also limit test set
+        X_test_flat[:2000],  # Limit test set
         y_test[:2000], 
         k_values=[1, 3, 5]
     )
