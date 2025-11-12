@@ -161,6 +161,6 @@ In conclusion, this project shows that deep learning models provide better perfo
 
 9. Github
 
-Since for some reason moodle won’t allow me to submit my code, I made a public github for my code: https://github.com/JakobeAllen/mnist-project
+I made a public github for my code: https://github.com/JakobeAllen/mnist-project
 
 
